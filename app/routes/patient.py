@@ -17,10 +17,12 @@ from app.core.deps import CurrentUser
 
 router = APIRouter()
 
+
 def to_naive(dt):
     if dt and dt.tzinfo:
         return dt.astimezone(timezone.utc).replace(tzinfo=None)
     return dt
+
 
 @router.post('/', response_model=PatientPublic)
 async def create_patient(

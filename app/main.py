@@ -25,7 +25,9 @@ app.include_router(
     patient.router, prefix='/api/v1/patients', tags=['Pacientes']
 )
 
-app.include_router(login.router, prefix='/api/v1/login', tags=['Login'])
+app.include_router(login.router, prefix='/api/v1/users/login', tags=['Login'])
+
+app.include_router(user.router, prefix='/api/v1/users', tags=['Usuarios'])
 
 
 @app.get('/health')

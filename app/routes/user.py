@@ -1,7 +1,12 @@
 from typing import Any
 from fastapi import APIRouter, HTTPException, Query
 from sqlmodel import select
-from nuvie_db.nuvie.models.user import User, UserCreate, UserPublic, UsersPublic
+from nuvie_db.nuvie.models.user import (
+    User,
+    UserCreate,
+    UserPublic,
+    UsersPublic,
+)
 
 from app.core.db import async_session
 from app.core.deps import CurrentUser
@@ -10,7 +15,7 @@ from app.core.security import get_password_hash
 router = APIRouter()
 
 
-@router.post("/", response_model=UserPublic)
+@router.post('/', response_model=UserPublic)
 async def create_user(
     user_in: UserCreate,
 ) -> Any:
@@ -26,12 +31,12 @@ async def create_user(
         if existing_user:
             raise HTTPException(
                 status_code=400,
-                detail="Usuário com este nome já existe no sistema.",
+                detail='Usuário com este nome já existe no sistema.',
             )
 
         user_data = user_in.model_dump()
-        if user_data.get("password"):
-            user_data["password"] = get_password_hash(user_data["password"])
+        if user_data.get('password'):
+            user_data['password'] = get_password_hash(user_data['password'])
 
         db_user = User.model_validate(user_data)
         session.add(db_user)
@@ -41,11 +46,11 @@ async def create_user(
         return db_user
 
 
-@router.get("/", response_model=UsersPublic)
+@router.get('/', response_model=UsersPublic)
 async def read_users(
-        current_user: CurrentUser,
-        skip: int = 0,
-        limit: int = Query(default=100, le=100),
+    current_user: CurrentUser,
+    skip: int = 0,
+    limit: int = Query(default=100, le=100),
 ) -> Any:
     """
     Recuperar todos os usuários.
@@ -60,10 +65,10 @@ async def read_users(
         return UsersPublic(data=users, count=count)
 
 
-@router.get("/{user_id}", response_model=UserPublic)
+@router.get('/{user_id}', response_model=UserPublic)
 async def read_user(
-        user_id: int,
-        current_user: CurrentUser,
+    user_id: int,
+    current_user: CurrentUser,
 ) -> Any:
     """
     Recuperar usuário por ID.
@@ -73,15 +78,15 @@ async def read_user(
         if not user:
             raise HTTPException(
                 status_code=404,
-                detail="Usuário não encontrado.",
+                detail='Usuário não encontrado.',
             )
         return user
 
 
-@router.delete("/{user_id}")
+@router.delete('/{user_id}')
 async def delete_user(
-        user_id: int,
-        current_user: CurrentUser,
+    user_id: int,
+    current_user: CurrentUser,
 ) -> None:
     """
     Deletar usuário.
@@ -91,7 +96,7 @@ async def delete_user(
         if not user:
             raise HTTPException(
                 status_code=404,
-                detail="Usuário não encontrado.",
+                detail='Usuário não encontrado.',
             )
 
         await session.delete(user)

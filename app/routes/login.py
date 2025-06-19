@@ -17,7 +17,7 @@ from typing import Annotated
 router = APIRouter()
 
 
-@router.post('access-token')
+@router.post('/access-token')
 async def login_access_token(
     request: Request,
     response: Response,
