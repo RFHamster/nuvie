@@ -33,7 +33,7 @@ async def login_access_token(
         user = result.first()
         if not user:
             raise HTTPException(
-                status_code=400, detail='Incorrect email or password'
+                status_code=404, detail='Incorrect email or password'
             )
     if not verify_password(form_data.password, user.password):
         raise HTTPException(

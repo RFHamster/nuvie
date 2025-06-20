@@ -18,7 +18,6 @@ def parse_date(date_str: str) -> Optional[datetime]:
         return None
 
     try:
-        # Tenta diferentes formatos de data
         formats = ['%Y-%m-%d', '%m/%d/%Y', '%d/%m/%Y', '%Y-%m-%d %H:%M:%S']
 
         for fmt in formats:
@@ -27,7 +26,6 @@ def parse_date(date_str: str) -> Optional[datetime]:
             except ValueError:
                 continue
 
-        # Se nenhum formato funcionou, tenta pandas
         return pd.to_datetime(date_str)
 
     except Exception as e:
@@ -176,9 +174,8 @@ async def import_patients_from_csv(csv_file_path: str, batch_size: int = 100):
 
                         patient_data = map_csv_to_patient(row)
 
-                        # Criar paciente
                         db_patient = Patient(
-                            id=clean_string(row.get('Id')),  # Usar ID do CSV
+                            id=clean_string(row.get('Id')),
                             **patient_data.model_dump()
                         )
 
@@ -190,7 +187,6 @@ async def import_patients_from_csv(csv_file_path: str, batch_size: int = 100):
                         error_count += 1
                         continue
 
-                # Commit do lote
                 try:
                     await session.commit()
                     logger.info(f"Lote commitado com sucesso")
@@ -198,7 +194,6 @@ async def import_patients_from_csv(csv_file_path: str, batch_size: int = 100):
                     logger.error(f"Erro ao commitar lote: {e}")
                     await session.rollback()
 
-        # Resumo final
         logger.info(f"""
         === RESUMO DA IMPORTAÇÃO ===
         Total de registros processados: {len(df)}
