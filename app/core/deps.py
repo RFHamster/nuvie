@@ -10,7 +10,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlmodel import Session
 from typing import Annotated, Type
 
-reusable_oauth2 = OAuth2PasswordBearer(tokenUrl=f'/api/v1/loginaccess-token')
+reusable_oauth2 = OAuth2PasswordBearer(tokenUrl=f'/api/v1/users/login/access-token')
 
 ## README.md
 ## Deixei esse pattern escrito aqui porque é muito comum em projetos.
